@@ -7,15 +7,13 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ProductManagerTest {
 
-
     Book firstBook = new Book(1, "One", 100, "King");
     Book secondBook = new Book(2, "Rock", 500, "Keysi");
     Book thirdBook = new Book(3, "Space", 1000, "Nokia");
 
-    SmartPhone firstSmartPhone = new SmartPhone(4, "One", 100, "Honor");
+    SmartPhone firstSmartPhone = new SmartPhone(1, "One", 100, "Honor");
     SmartPhone secondSmartPhone = new SmartPhone(5, "Rock", 500, "Samsung");
     SmartPhone thirdSmartPhone = new SmartPhone(6, "Space", 1000, "Nokia");
-
 
     @Test
     void shouldFindByNameIfExists() {
@@ -37,7 +35,7 @@ class ProductManagerTest {
     }
 
     @Test
-    void shouldFindIfExists() {
+    void shouldFindByProducerIfExists() {
         ProductRepository repository = new ProductRepository();
         repository.save(firstBook);
         repository.save(secondBook);
@@ -51,6 +49,43 @@ class ProductManagerTest {
         Product[] actual = manager.searchBy("Nokia");
         Product[] expected = new Product[]{
                 thirdBook, thirdSmartPhone};
+
+        assertArrayEquals(expected, actual);
+    }
+    @Test
+    void shouldFindByAuthorIfExists() {
+        ProductRepository repository = new ProductRepository();
+        repository.save(firstBook);
+        repository.save(secondBook);
+        repository.save(thirdBook);
+        repository.save(firstSmartPhone);
+        repository.save(secondSmartPhone);
+        repository.save(thirdSmartPhone);
+
+        ProductManager manager = new ProductManager(repository);
+
+        Product[] actual = manager.searchBy("King");
+        Product[] expected = new Product[]{
+                firstBook};
+
+        assertArrayEquals(expected, actual);
+    }
+
+    @Test
+    void shouldFindIfExists() {
+        ProductRepository repository = new ProductRepository();
+        repository.save(firstBook);
+        repository.save(secondBook);
+        repository.save(thirdBook);
+        repository.save(firstSmartPhone);
+        repository.save(secondSmartPhone);
+        repository.save(thirdSmartPhone);
+
+        ProductManager manager = new ProductManager(repository);
+
+        Product[] actual = manager.searchBy("Samsung");
+        Product[] expected = new Product[]{
+                secondSmartPhone};
 
         assertArrayEquals(expected, actual);
     }
@@ -71,21 +106,5 @@ class ProductManagerTest {
         Product[] expected = new Product[0];
 
         assertArrayEquals(expected, actual);
-    }
-
-    @Test
-    void shouldNotFindIfUnknownProduct() {
-        Product product = new Product(6, "Space2", 1000);
-
-        ProductRepository repository = new ProductRepository();
-        repository.save(product);
-
-        ProductManager manager = new ProductManager(repository);
-
-        Product[] actual = manager.searchBy("Space2");
-        Product[] expected = new Product[0];
-
-        assertArrayEquals(expected, actual);
-
     }
 }

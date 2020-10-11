@@ -1,8 +1,6 @@
 package ru.netology.domain;
 
 public class SmartPhone extends Product {
-
-
     private String producer;
 
     public SmartPhone() {
@@ -20,6 +18,16 @@ public class SmartPhone extends Product {
 
     public void setProducer(String producer) {
         this.producer = producer;
+    }
+
+    public boolean matches(String search) {
+        if (super.matches(search)) {
+            return true;
+        }
+        if (getProducer().equalsIgnoreCase(search)) {
+            return true;
+        }
+        return false;
     }
 }
 
